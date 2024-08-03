@@ -500,7 +500,7 @@ export function AddOpportunity() {
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Due Date</div>
-                                                <TextField
+                                                <RequiredTextField
                                                     type={'date'}
                                                     name='due_date'
                                                     value={formData.due_date}
