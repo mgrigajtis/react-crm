@@ -428,7 +428,7 @@ export default function Users() {
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomToolbar>
-                <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
+                <Tabs value={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
                     <CustomTab value="active" label="Active"
                         sx={{
                             backgroundColor: tab === 'active' ? '#F0F7FF' : '#284871',

@@ -445,7 +445,7 @@ export default function Accounts() {
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomToolbar>
-                <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
+                <Tabs value={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
                     <CustomTab value="open" label="Open"
                         sx={{
                             backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
