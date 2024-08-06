@@ -32,44 +32,6 @@ import { CustomPopupIcon, CustomSelectField, RequiredTextField, StyledSelect } f
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 
-// const useStyles = makeStyles({
-//   btnIcon: {
-//     height: '14px',
-//     color: '#5B5C63'
-//   },
-//   breadcrumbs: {
-//     color: 'white'
-//   },
-//   fields: {
-//     height: '5px'
-//   },
-//   chipStyle: {
-//     backgroundColor: 'red'
-//   },
-//   icon: {
-//     '&.MuiChip-deleteIcon': {
-//       color: 'darkgray'
-//     }
-//   }
-// })
-
-// const textFieldStyled = makeStyles(() => ({
-//   root: {
-//     borderLeft: '2px solid red',
-//     height: '35px'
-//   },
-//   fieldHeight: {
-//     height: '35px'
-//   }
-// }))
-
-// function getStyles (name, personName, theme) {
-//   return {
-//     fontWeight:
-//       theme.typography.fontWeightRegular
-//   }
-// }
-
 type FormErrors = {
   title?: string[],
   first_name?: string[],
@@ -86,19 +48,20 @@ type FormErrors = {
   contacts?: string[],
   status?: string[],
   source?: string[],
-  address_line?: string[],
-  street?: string[],
+  address_line_1?: string[],
+  address_line_2?: string[],
   city?: string[],
+  enquiry_type?: string[],
   state?: string[],
   postcode?: string[],
   country?: string[],
   tags?: string[],
   company?: string[],
-  probability?: number[],
   industry?: string[],
   skype_ID?: string[],
   file?: string[],
 };
+
 interface FormData {
   title: string,
   first_name: string,
@@ -107,23 +70,22 @@ interface FormData {
   phone: string,
   email: string,
   lead_attachment: string | null,
-  opportunity_amount: string,
   website: string,
   description: string,
   teams: string,
   assigned_to: string[],
-  contacts: string[],
   status: string,
   source: string,
-  address_line: string,
-  street: string,
+  address_line_1: string,
+  address_line_2: string,
+  enquiry_type: string,
   city: string,
   state: string,
   postcode: string,
   country: string,
+  tasks: string[],
   tags: string[],
   company: string,
-  probability: number,
   industry: string,
   skype_ID: string,
   file: string | null
@@ -148,32 +110,31 @@ export function AddLeads() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     title: '',
-    first_name: '',
-    last_name: '',
-    account_name: '',
-    phone: '',
-    email: '',
-    lead_attachment: null,
-    opportunity_amount: '',
-    website: '',
-    description: '',
-    teams: '',
-    assigned_to: [],
-    contacts: [],
-    status: 'assigned',
-    source: 'call',
-    address_line: '',
-    street: '',
-    city: '',
-    state: '',
-    postcode: '',
-    country: '',
-    tags: [],
-    company: '',
-    probability: 1,
-    industry: 'ADVERTISING',
-    skype_ID: '',
-    file: null
+      first_name: '',
+      last_name: '',
+      account_name: '',
+      phone: '',
+      email: '',
+      lead_attachment: '',
+      website: '',
+      description: '',
+      enquiry_type: '',
+      teams: '',
+      tasks: [],
+      assigned_to: [],
+      status: '',
+      source: '',
+      address_line_1: '',
+      address_line_2: '',
+      city: '',
+      state: '',
+      postcode: '',
+      country: '',
+      tags: [],
+      company: '',
+      industry: '',
+      skype_ID: '',
+      file: null
   })
 
   useEffect(() => {
@@ -186,10 +147,7 @@ export function AddLeads() {
   const handleChange2 = (title: any, val: any) => {
     // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     // console.log('nd', val)
-    if (title === 'contacts') {
-      setFormData({ ...formData, contacts: val.length > 0 ? val.map((item: any) => item.id) : [] });
-      setSelectedContacts(val);
-    } else if (title === 'assigned_to') {
+    if (title === 'assigned_to') {
       setFormData({ ...formData, assigned_to: val.length > 0 ? val.map((item: any) => item.id) : [] });
       setSelectedAssignTo(val);
     } else if (title === 'tags') {
@@ -299,25 +257,24 @@ export function AddLeads() {
       account_name: '',
       phone: '',
       email: '',
-      lead_attachment: null,
-      opportunity_amount: '',
+      lead_attachment: '',
       website: '',
       description: '',
+      enquiry_type: '',
       teams: '',
+      tasks: [],
       assigned_to: [],
-      contacts: [],
-      status: 'assigned',
-      source: 'call',
-      address_line: '',
-      street: '',
+      status: '',
+      source: '',
+      address_line_1: '',
+      address_line_2: '',
       city: '',
       state: '',
       postcode: '',
       country: '',
       tags: [],
       company: '',
-      probability: 1,
-      industry: 'ADVERTISING',
+      industry: '',
       skype_ID: '',
       file: null
     });
@@ -378,16 +335,8 @@ export function AddLeads() {
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Amount</div>
-                        <TextField
-                          type={'number'}
-                          name='opportunity_amount'
-                          value={formData.opportunity_amount}
-                          onChange={handleChange}
-                          style={{ width: '70%' }}
-                          size='small'
-                          helperText={errors?.opportunity_amount?.[0] ? errors?.opportunity_amount[0] : ''}
-                          error={!!errors?.opportunity_amount?.[0]}
-                        />
+
+
                       </div>
                     </div>
                     <div className='fieldContainer2'>
@@ -710,25 +659,7 @@ export function AddLeads() {
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Probability</div>
-                        <TextField
-                          name='probability'
-                          value={formData.probability}
-                          onChange={handleChange}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <IconButton disableFocusRipple disableTouchRipple
-                                  sx={{ backgroundColor: '#d3d3d34a', width: '45px', borderRadius: '0px', mr: '-12px' }}>
-                                  <FaPercent style={{ width: "12px" }} />
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                          }}
-                          style={{ width: '70%' }}
-                          size='small'
-                          helperText={errors?.probability?.[0] ? errors?.probability[0] : ''}
-                          error={!!errors?.probability?.[0]}
-                        />
+
 
                       </div>
                     </div>
@@ -893,12 +824,12 @@ export function AddLeads() {
                         >Address Lane</div>
                         <TextField
                           name='address_line'
-                          value={formData.address_line}
+                          value={formData.address_line_1}
                           onChange={handleChange}
                           style={{ width: '70%' }}
                           size='small'
-                          helperText={errors?.address_line?.[0] ? errors?.address_line[0] : ''}
-                          error={!!errors?.address_line?.[0]}
+                          helperText={errors?.address_line_1?.[0] ? errors?.address_line_1[0] : ''}
+                          error={!!errors?.address_line_1?.[0]}
                         />
                       </div>
                       <div className='fieldSubContainer'>
@@ -919,12 +850,12 @@ export function AddLeads() {
                         <div className='fieldTitle'>Street</div>
                         <TextField
                           name='street'
-                          value={formData.street}
+                          value={formData.address_line_2}
                           onChange={handleChange}
                           style={{ width: '70%' }}
                           size='small'
-                          helperText={errors?.street?.[0] ? errors?.street[0] : ''}
-                          error={!!errors?.street?.[0]}
+                          helperText={errors?.address_line_2?.[0] ? errors?.address_line_2[0] : ''}
+                          error={!!errors?.address_line_2?.[0]}
                         />
                       </div>
                       <div className='fieldSubContainer'>
