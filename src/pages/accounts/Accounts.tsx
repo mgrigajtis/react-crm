@@ -599,9 +599,8 @@ export default function Accounts() {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                                                    <IconButton>
+                                                                    <IconButton  onClick={() => deleteRow(item?.id)}>
                                                                         <FaTrashAlt
-                                                                            onClick={() => deleteRow(item?.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
                                                                     </IconButton>
                                                                 </TableCell>
