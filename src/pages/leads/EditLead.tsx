@@ -940,7 +940,7 @@ export function EditLead() {
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Phone Number</div>
-                                                <Tooltip title="Number must starts with +91">
+                                                <Tooltip title="Number must be between 9 and 15 digits">
                                                     <TextField
                                                         name='phone'
                                                         value={formData.phone}
