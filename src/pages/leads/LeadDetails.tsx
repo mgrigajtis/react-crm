@@ -447,7 +447,7 @@ function LeadDetails(props: any) {
                                     <div style={{ width: '32%' }}>
                                         <div className='title2'>Mobile Number</div>
                                         <div className='title3'>
-                                            {leadDetails?.phone ? `${leadDetails?.phone}` : '---'}
+                                             {leadDetails?.phone ? `${leadDetails?.phone}` : '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>

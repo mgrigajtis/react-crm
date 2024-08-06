@@ -271,7 +271,7 @@ export function AddUsers() {
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Phone Number</div>
-                                                <Tooltip title="Number must starts with +91">
+                                                <Tooltip title="Number must be between 9 and 15 digits">
                                                     <RequiredTextField
                                                         name='phone'
                                                         id='outlined-error-helper-text'
@@ -287,7 +287,7 @@ export function AddUsers() {
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Alternate Phone</div>
-                                                <Tooltip title="Number must starts with +91">
+                                                <Tooltip title="Number must be between 9 and 15 digits">
                                                     <RequiredTextField
                                                         required
                                                         name='alternate_phone'

@@ -177,7 +177,7 @@ function EditContact() {
   };
 
   const isValidPhoneNumber = (phoneNumber: any) => {
-    return /^\+91\d{10}$/.test(phoneNumber);
+    return /^\d{9,15}$/.test(phoneNumber);
   };
 
   const submitForm = () => {
@@ -380,7 +380,7 @@ function EditContact() {
                     <div className='fieldContainer2'>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Mobile Number</div>
-                        <Tooltip title="Number must starts with +91">
+                        <Tooltip title="Number must be between 9 and 15 digits">
                           <RequiredTextField
                             name='mobile_number'
                             value={formData.mobile_number}
@@ -395,7 +395,7 @@ function EditContact() {
                       </div>
                       <div className='fieldSubContainer'>
                         <div className='fieldTitle'>Secondary Number</div>
-                        <Tooltip title="Number must starts with +91">
+                        <Tooltip title="Number must be between 9 and 15 digits">
                           <RequiredTextField
                             required
                             name='secondary_number'
