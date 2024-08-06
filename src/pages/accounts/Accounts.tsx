@@ -441,6 +441,9 @@ export default function Accounts() {
 
     // const selectClasses = selectOpen ? 'select-opened' : '';
     // console.log(!!(selectedId?.length === 0), 'asd');
+    if (loading) {
+        return <Spinner></Spinner>;
+    }
 
     return (
         <Box sx={{ mt: '60px' }}>
@@ -607,7 +610,7 @@ export default function Accounts() {
                                                             </TableRow>
                                                         )
                                                     })
-                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
+                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Typography>No accounts available</Typography></TableCell></TableRow>
                                         }
                                         {
                                             // emptyRows > 0 && (
@@ -685,7 +688,7 @@ export default function Accounts() {
                                                         </TableRow>
                                                     )
                                                 })
-                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
+                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Typography>No accounts available</Typography></TableCell></TableRow>
                                         }
                                     </TableBody>
                                 }
