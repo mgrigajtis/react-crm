@@ -223,7 +223,7 @@ export default function Leads(props: any) {
                       <Box className='lead-box1'>
                         <Stack className='lead-row1'>
                           <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
-                            {item?.title}
+                            {item?.account_name}
                           </div>
                           <div onClick={() => deleteLead(item?.id)}>
                             <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />

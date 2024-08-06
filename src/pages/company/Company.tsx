@@ -206,7 +206,7 @@ export default function Company() {
                         }}
                     >
                         {recordsList?.length && recordsList.map((item: any, i: any) => (
-                            <MenuItem key={item.id} value={item[0]} >
+                            <MenuItem key={i} value={item[0]} >
                                 {item[1]}
                             </MenuItem>
                         ))}

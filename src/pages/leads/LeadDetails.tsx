@@ -227,7 +227,6 @@ function LeadDetails(props: any) {
                     country: country?.[0],
                     tags: leadDetails?.tags,
                     company: leadDetails?.company,
-                    probability: leadDetails?.probability,
                     industry: leadDetails?.industry,
                     skype_ID: leadDetails?.skype_ID,
                     file: leadDetails?.file,
@@ -378,12 +377,6 @@ function LeadDetails(props: any) {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Probability</div>
-                                    <div className='title3'>
-                                        {leadDetails?.probability || '---'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
                                     <div className='title2'>website</div>
                                     <div className='title3'>
                                         {leadDetails?.website ? <Link>
@@ -454,8 +447,11 @@ function LeadDetails(props: any) {
                                     <div style={{ width: '32%' }}>
                                         <div className='title2'>Mobile Number</div>
                                         <div className='title3'>
-                                            {leadDetails?.phone ? `${leadDetails?.phone}
-                                                <FaStar style={{ fontSize: '16px', fill: 'yellow' }} /><br />` : '---'}
+                                        {leadDetails?.phone ? (
+                                            <>
+                                                {leadDetails?.phone} <FaStar style={{ fontSize: '16px', fill: 'yellow' }} /><br />
+                                            </>
+                                            ) : '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
