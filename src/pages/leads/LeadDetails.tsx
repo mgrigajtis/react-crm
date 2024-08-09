@@ -52,33 +52,32 @@ type response = {
     created_on: string;
     created_on_arrow: string;
     date_of_birth: string;
-    title: string;
-    first_name: string;
-    last_name: string;
-    account_name: string;
-    phone: string;
-    email: string;
-    lead_attachment: string;
-    opportunity_amount: string;
-    website: string;
-    description: string | '';
-    teams: string;
-    assigned_to: string;
-    contacts: string;
-    status: string;
-    source: string;
-    address_line: string;
-    street: string;
-    city: string;
-    state: string;
-    postcode: string;
-    country: string;
-    tags: [];
-    company: string;
-    probability: string;
-    industry: string;
-    skype_ID: string;
-    file: string;
+    title: string,
+    first_name: string,
+    last_name: string,
+    account_name: string,
+    phone: string,
+    email: string,
+    lead_attachment: string | null,
+    website: string,
+    description: string,
+    teams: string[],
+    assigned_to: string[],
+    status: string,
+    source: string,
+    address_line_1: string,
+    address_line_2: string,
+    enquiry_type: string,
+    city: string,
+    state: string,
+    postcode: string,
+    country: string,
+    tasks: string[],
+    tags: string[],
+    company: string,
+    industry: string,
+    skype_ID: string,
+    file: string | null
 
     close_date: string;
     organization: string;
@@ -158,17 +157,9 @@ function LeadDetails(props: any) {
             Authorization: localStorage.getItem('Token'),
             org: localStorage.getItem('org')
         }
-        // const formData = new FormData();
-        // formData.append('inputValue', inputValue);
-        // attachedFiles.forEach((file, index) => {
-        //   formData.append(`file_${index}`, file);
-        // });
 
-        // const data = { comment: note }
-        // const data = { comment:  inputValue }
-        // const data = { comment: inputValue, attachedFiles }
         const data = { Comment: inputValue || note, lead_attachment: attachments }
-        // fetchData(`${LeadUrl}/comment/${state.leadId}/`, 'PUT', JSON.stringify(data), Header)
+
         fetchData(`${LeadUrl}/${state.leadId}/`, 'POST', JSON.stringify(data), Header)
             .then((res: any) => {
                 // console.log('Form data:', res);
@@ -193,7 +184,7 @@ function LeadDetails(props: any) {
     }
 
     const editHandle = () => {
-        // navigate('/contacts/edit-contacts', { state: { value: contactDetails, address: newAddress } })
+
         let country: string[] | undefined;
         for (country of countries) {
             if (Array.isArray(country) && country.includes(leadDetails?.country || '')) {
@@ -210,24 +201,23 @@ function LeadDetails(props: any) {
                     account_name: leadDetails?.account_name,
                     phone: leadDetails?.phone,
                     email: leadDetails?.email,
-                    lead_attachment: leadDetails?.lead_attachment,
-                    opportunity_amount: leadDetails?.opportunity_amount,
+                    lead_attachment: leadDetails?.file,
                     website: leadDetails?.website,
                     description: leadDetails?.description,
+                    enquiry_type: leadDetails?.enquiry_type,
                     teams: leadDetails?.teams,
+                    tasks: leadDetails?.tasks,
                     assigned_to: leadDetails?.assigned_to,
-                    contacts: leadDetails?.contacts,
                     status: leadDetails?.status,
                     source: leadDetails?.source,
-                    address_line: leadDetails?.address_line,
-                    street: leadDetails?.street,
+                    address_line_1: leadDetails?.address_line_1,
+                    address_line_2: leadDetails?.address_line_2,
                     city: leadDetails?.city,
                     state: leadDetails?.state,
                     postcode: leadDetails?.postcode,
-                    country: country?.[0],
+                    country: leadDetails?.country,
                     tags: leadDetails?.tags,
                     company: leadDetails?.company,
-                    probability: leadDetails?.probability,
                     industry: leadDetails?.industry,
                     skype_ID: leadDetails?.skype_ID,
                     file: leadDetails?.file,
@@ -287,12 +277,12 @@ function LeadDetails(props: any) {
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
-    // console.log(attachedFiles, 'dsfsd', attachmentList, 'aaaaa', attachments);
-
     const module = 'Leads'
     const crntPage = 'Lead Details'
     const backBtn = 'Back To Leads'
-    // console.log(tags, countries, source, status, industries, users, contacts, 'leaddetail')
+
+    console.log(`Lead Details: ${leadDetails}`)
+
     return (
         <Box sx={{ mt: '60px' }}>
             <div>
@@ -322,7 +312,7 @@ function LeadDetails(props: any) {
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
                                 <div className='title2'>
-                                    {leadDetails?.title}
+                                    {leadDetails?.account_name}
                                     {/* {console.log(users?.length && users.length,'lll')} */}
                                     <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
                                         {/* {
@@ -350,52 +340,27 @@ function LeadDetails(props: any) {
                             </div>
                             <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2' >Expected close date</div>
-                                    <div className='title3'>
-                                        {leadDetails?.close_date || '---'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Account Name</div>
+                                <div className='title2'>Account Name</div>
                                     <div className='title3'>
                                         {leadDetails?.account_name}
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Organization Name</div>
+                                <div className='title2'>Organization Name</div>
                                     <div className='title3'>
                                         {leadDetails?.organization || '---'}
                                     </div>
                                 </div>
-                            </div>
-                            <div className='detailList'>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Created from site</div>
+                                <div className='title2'>Created from site</div>
                                     <div className='title3'>
-                                        {/* {lead.pipeline ? lead.pipeline : '------'} */}
-                                        {/* {leadDetails?.created_from_site} */}
                                         <AntSwitch checked={leadDetails?.created_from_site} />
                                     </div>
                                 </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>Probability</div>
-                                    <div className='title3'>
-                                        {leadDetails?.probability || '---'}
-                                    </div>
-                                </div>
-                                <div style={{ width: '32%' }}>
-                                    <div className='title2'>website</div>
-                                    <div className='title3'>
-                                        {leadDetails?.website ? <Link>
-                                            {leadDetails?.website}
-                                        </Link> : '---'}
-
-                                    </div>
-                                </div>
                             </div>
                             <div className='detailList'>
                                 <div style={{ width: '32%' }}>
-                                    <div className='title2'>Industry</div>
+                                <div className='title2'>Industry</div>
                                     <div className='title3'>
                                         {leadDetails?.industry || '---'}
                                     </div>
@@ -409,11 +374,15 @@ function LeadDetails(props: any) {
                                     </div>
                                 </div>
                                 <div style={{ width: '32%' }}>
-                                    <div style={{ fontSize: '16px', fontWeight: 600 }}>&nbsp;</div>
-                                    <div style={{ fontSize: '16px', color: 'gray' }}>&nbsp;</div>
+                                    <div className='title2'>website</div>
+                                    <div className='title3'>
+                                        {leadDetails?.website ? <Link>
+                                            {leadDetails?.website}
+                                        </Link> : '---'}
+
+                                    </div>
                                 </div>
                             </div>
-                            {/* </div> */}
                             {/* Contact details */}
                             <div style={{ marginTop: '2%' }}>
                                 <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -473,15 +442,15 @@ function LeadDetails(props: any) {
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
                                     <div style={{ width: '32%' }}>
-                                        <div className='title2'>Address Lane</div>
+                                        <div className='title2'>Address Line 1</div>
                                         <div className='title3'>
-                                            {leadDetails?.address_line || '---'}
+                                            {leadDetails?.address_line_1 || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
-                                        <div className='title2'>Street</div>
+                                        <div className='title2'>Address Line 2</div>
                                         <div className='title3'>
-                                            {leadDetails?.street || '---'}
+                                            {leadDetails?.address_line_2 || '---'}
                                         </div>
                                     </div>
                                     <div style={{ width: '32%' }}>
@@ -493,7 +462,7 @@ function LeadDetails(props: any) {
                                 </div>
                                 <div className='detailList'>
                                     <div style={{ width: '32%' }}>
-                                        <div className='title2'>Pincode</div>
+                                        <div className='title2'>Postal Code</div>
                                         <div className='title3'>
                                             {leadDetails?.postcode || '---'}
                                         </div>
