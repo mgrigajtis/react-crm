@@ -117,7 +117,8 @@ export const AccountDetails = (props: any) => {
     const [selectedCountry, setSelectedCountry] = useState([])
     const [attachments, setAttachments] = useState([])
     const [tags, setTags] = useState([])
-    const [intakeForms, setIntakeForms] = useState([])
+    const [rentersIntakeForms, setRentersIntakeForms] = useState([])
+    const [commercialIntakeForms, setCommercialIntakeForms] = useState([])
     const [countries, setCountries] = useState<string[][]>([])
     const [source, setSource] = useState([])
     const [status, setStatus] = useState([])
@@ -154,7 +155,8 @@ export const AccountDetails = (props: any) => {
                     setLeads(res?.leads)
                     setTags(res?.tags)
                     setTeams(res?.teams)
-                    setIntakeForms(res?.intake_forms)
+                    setRentersIntakeForms(res?.renters_intake_forms)
+                    setCommercialIntakeForms(res?.commercial_intake_forms)
                     // setAttachments(res?.attachments)
                     // setTags(res?.tags)
                     // setCountries(res?.countries)
@@ -518,8 +520,8 @@ export const AccountDetails = (props: any) => {
                                 <Table>
                                 <TableBody>
                                         {
-                                            intakeForms != null && intakeForms?.length > 0 ?
-                                                intakeForms.map((item: any, index: any) => {
+                                            rentersIntakeForms != null && rentersIntakeForms?.length > 0 ?
+                                                rentersIntakeForms.map((item: any, index: any) => {
                                                         return (
                                                             <TableRow
                                                                 tabIndex={-1}
@@ -551,6 +553,66 @@ export const AccountDetails = (props: any) => {
                                     </TableBody>
                                     </Table>
                                 </div>
+                            </Box>
+                            <Box sx={{ width: '100%', marginTop: "16px" }}>
+                                <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
+                                    <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
+                                            Commercial Forms
+                                        </div>
+                                        {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
+                                        {/* Add Social #1E90FF */}
+                                        <Button
+                                            type='submit'
+                                            variant='text'
+                                            size='small'
+                                            startIcon={<FaPlus style={{ fill: '#3E79F7', width: '12px' }} />}
+                                            style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
+                                            onClick={() => navigate('/app/accounts/add-commercial-form', {state : {account: accountDetails}})}
+                                        >
+                                            Add Commercial Form
+                                        </Button>
+                                        {/* </div> */}
+                                    </div>
+
+                                    <div style={{ padding: '10px 10px 10px 15px', marginTop: '5%' }}>
+                                    <Table>
+                                    <TableBody>
+                                            {
+                                                commercialIntakeForms != null && commercialIntakeForms?.length > 0 ?
+                                                commercialIntakeForms.map((item: any, index: any) => {
+                                                            return (
+                                                                <TableRow
+                                                                    tabIndex={-1}
+                                                                    key={index}
+                                                                    sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                                                                >
+                                                                    <TableCell
+                                                                        className='tableCell-link'
+                                                                    >
+                                                                        <Typography>Commercial Form {index + 1}</Typography>
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                    : <TableRow> <TableCell sx={{ border: 0 }}><Typography>No forms available</Typography></TableCell></TableRow>
+                                            }
+                                            {
+                                                // emptyRows > 0 && (
+                                                //     <TableRow
+                                                //         style={{
+                                                //             height: (dense ? 33 : 53) * emptyRows
+                                                //         }}
+                                                //     >
+                                                //         <TableCell colSpan={6} />
+                                                //     </TableRow>
+                                                // )
+
+                                            }
+                                        </TableBody>
+                                        </Table>
+                                    </div>
+                                </Box>
                             </Box>
                         </Box>
                     </div>

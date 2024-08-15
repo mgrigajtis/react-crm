@@ -27,6 +27,7 @@ import { AddAccount } from '../pages/accounts/AddAccount';
 import { EditAccount } from '../pages/accounts/EditAccount';
 import { AccountDetails } from '../pages/accounts/AccountDetails';
 import { AddRentersForm } from '../pages/forms/AddRentersForm';
+import { AddCommercialForm } from '../pages/forms/AddCommercialForm';
 import { AddUsers } from '../pages/users/AddUsers';
 import { EditUser } from '../pages/users/EditUser';
 import UserDetails from '../pages/users/UserDetails';
@@ -305,6 +306,7 @@ export default function Sidebar(props: any) {
                             <Route path='/app/cases/edit-case' element={<EditCase />} />
                             <Route path='/app/cases/case-details' element={<CaseDetails />} />
                             <Route path='/app/accounts/add-renters-form' element={<AddRentersForm />} />
+                            <Route path='/app/accounts/add-commercial-form' element={<AddCommercialForm />} />
                         </Routes>
                     </Box>
                 </MyContext.Provider>
