@@ -40,6 +40,12 @@ type FormErrors = {
     billing_postcode?: string[],
     billing_country?: string[],
     contact_name?: string[],
+    previous_residency_address_line?: string[],
+    previous_residency_street?: string[],
+    previous_residency_city?: string[],
+    previous_residency_state?: string[],
+    previous_residency_postcode?: string[],
+    previous_residency_country?: string[],
     teams?: string[],
     assigned_to?: string[],
     tags?: string[],
@@ -49,7 +55,7 @@ type FormErrors = {
     lead?: string[],
     contacts?: string[],
     file?: string[]
-
+    date_of_birth?: string[]
 
 };
 interface FormData {
@@ -62,6 +68,12 @@ interface FormData {
     billing_state: string,
     billing_postcode: string,
     billing_country: string,
+    previous_residency_address_line: string,
+    previous_residency_street: string,
+    previous_residency_city: string,
+    previous_residency_state: string,
+    previous_residency_postcode: string,
+    previous_residency_country: string,
     contact_name: string,
     teams: string[],
     assigned_to: string[],
@@ -71,7 +83,8 @@ interface FormData {
     status: string,
     lead: string,
     contacts: [],
-    file?: string | null
+    file?: string | null,
+    date_of_birth: Date | null,
 }
 
 export function AddAccount() {
@@ -100,6 +113,12 @@ export function AddAccount() {
         billing_state: '',
         billing_postcode: '',
         billing_country: '',
+        previous_residency_address_line: '',
+        previous_residency_street: '',
+        previous_residency_city: '',
+        previous_residency_state: '',
+        previous_residency_postcode: '',
+        previous_residency_country: '',
         contact_name: '',
         teams: [],
         assigned_to: [],
@@ -109,8 +128,8 @@ export function AddAccount() {
         status: 'open',
         lead: '',
         contacts: [],
-        file: null
-
+        file: null,
+        date_of_birth: null,
     })
 
     const handleChange2 = (title: any, val: any) => {
@@ -142,6 +161,7 @@ export function AddAccount() {
         else {
             setFormData({ ...formData, [name]: value });
         }
+        console.log(formData)
     };
     const backbtnHandle = () => {
         navigate('/app/accounts')
@@ -168,6 +188,12 @@ export function AddAccount() {
             billing_state: formData.billing_state,
             billing_postcode: formData.billing_postcode,
             billing_country: formData.billing_country,
+            previous_residency_address_line: formData.previous_residency_address_line,
+            previous_residency_street: formData.previous_residency_street,
+            previous_residency_city: formData.previous_residency_city,
+            previous_residency_state: formData.previous_residency_state,
+            previous_residency_postcode: formData.previous_residency_postcode,
+            previous_residency_country: formData.previous_residency_country,
             contact_name: formData.contact_name,
             teams: formData.teams,
             assigned_to: formData.assigned_to,
@@ -176,7 +202,8 @@ export function AddAccount() {
             website: formData.website,
             status: formData.status,
             lead: formData.lead,
-            contacts: formData.contacts
+            contacts: formData.contacts,
+            date_of_birth: formData.date_of_birth
         }
         fetchData(`${AccountsUrl}/`, 'POST', JSON.stringify(data), Header)
             .then((res: any) => {
@@ -204,6 +231,12 @@ export function AddAccount() {
             billing_state: '',
             billing_postcode: '',
             billing_country: '',
+            previous_residency_address_line: '',
+            previous_residency_street: '',
+            previous_residency_city: '',
+            previous_residency_state: '',
+            previous_residency_postcode: '',
+            previous_residency_country: '',
             contact_name: '',
             teams: [],
             assigned_to: [],
@@ -213,7 +246,8 @@ export function AddAccount() {
             status: 'open',
             lead: '',
             contacts: [],
-            file: null
+            file: null,
+            date_of_birth: null,
         });
         setErrors({})
         setSelectedContacts([]);
@@ -497,7 +531,7 @@ export function AddAccount() {
                                                 </FormControl>
                                             </div>
                                             <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'>account_attachment</div>
+                                                <div className='fieldTitle'>Account Attachment</div>
                                                 <TextField
                                                     name='account_attachment'
                                                     value={formData.account_attachment}
@@ -534,6 +568,26 @@ export function AddAccount() {
                                             </div>
                                         </div>
                                         <div className='fieldContainer2'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Date Of Birth</div>
+                                                <RequiredTextField
+                                                    type={'date'}
+                                                    name='date_of_birth'
+                                                    value={formData.date_of_birth}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.date_of_birth?.[0] ? errors?.date_of_birth[0] : ''}
+                                                    error={!!errors?.date_of_birth?.[0]}
+                                                    sx={{
+                                                        '& input[type="date"]::-webkit-calendar-picker-indicator': {
+                                                            backgroundColor: 'whitesmoke',
+                                                            padding: '13px',
+                                                            marginRight: '-15px'
+                                                        }
+                                                    }}
+                                                ></RequiredTextField>
+                                            </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Tags</div>
                                                 <FormControl error={!!errors?.tags?.[0]} sx={{ width: '70%' }}>
@@ -582,9 +636,6 @@ export function AddAccount() {
                                                     />
                                                     <FormHelperText>{errors?.tags?.[0] || ''}</FormHelperText>
                                                 </FormControl>
-                                            </div>
-                                            <div className='fieldSubContainer'>
-                                                <div className='fieldTitle'></div>
                                             </div>
                                         </div>
                                     </Box>
@@ -691,6 +742,113 @@ export function AddAccount() {
                                                         ))}
                                                     </Select>
                                                     <FormHelperText>{errors?.billing_country?.[0] ? errors?.billing_country[0] : ''}</FormHelperText>
+                                                </FormControl>
+                                            </div>
+                                        </div>
+                                    </Box>
+                                </AccordionDetails>
+                            </Accordion>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
+                            <Accordion style={{ width: '98%' }} defaultExpanded>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Previous Address</Typography>
+                                </AccordionSummary>
+                                <Divider className='divider' />
+                                <AccordionDetails>
+                                    <Box
+                                        sx={{ width: '98%', color: '#1A3353', mb: 1 }}
+                                        component='form'
+                                    >
+                                        <div className='fieldContainer'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Previous Address Line</div>
+                                                <TextField
+                                                    name='previous_residency_address_line'
+                                                    value={formData.previous_residency_address_line}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_address_line?.[0] ? errors?.previous_residency_address_line[0] : ''}
+                                                    error={!!errors?.previous_residency_address_line?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Previous Street</div>
+                                                <TextField
+                                                    name='previous_residency_street'
+                                                    value={formData.previous_residency_street}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_street?.[0] ? errors?.previous_residency_street[0] : ''}
+                                                    error={!!errors?.billing_street?.[0]}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Previous City</div>
+                                                <TextField
+                                                    name='previous_residency_city'
+                                                    value={formData.previous_residency_city}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_city?.[0] ? errors?.previous_residency_city[0] : ''}
+                                                    error={!!errors?.previous_residency_city?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Previous State</div>
+                                                <TextField
+                                                    name='previous_residency_state'
+                                                    value={formData.previous_residency_state}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_state?.[0] ? errors?.previous_residency_state[0] : ''}
+                                                    error={!!errors?.previous_residency_state?.[0]}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Previous Postcode</div>
+                                                <TextField
+                                                    name='previous_residency_postcode'
+                                                    value={formData.previous_residency_postcode}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_postcode?.[0] ? errors?.previous_residency_postcode[0] : ''}
+                                                    error={!!errors?.previous_residency_postcode?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Previous Country</div>
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='previous_residency_country'
+                                                        value={formData.previous_residency_country}
+                                                        open={countrySelectOpen}
+                                                        onClick={() => setCountrySelectOpen(!countrySelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setCountrySelectOpen(!countrySelectOpen)} className="select-icon-background">
+                                                                {countrySelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.previous_residency_country?.[0]}
+                                                    >
+                                                        {state?.countries?.length && state?.countries.map((option: any) => (
+                                                            <MenuItem key={option[0]} value={option[0]}>
+                                                                {option[1]}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    <FormHelperText>{errors?.previous_residency_country?.[0] ? errors?.previous_residency_country[0] : ''}</FormHelperText>
                                                 </FormControl>
                                             </div>
                                         </div>

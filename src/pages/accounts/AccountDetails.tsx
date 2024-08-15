@@ -9,7 +9,15 @@ import {
     Alert,
     Stack,
     Button,
-    Chip
+    Chip,
+    Table,
+    TableBody,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    TableCell,
+    Typography
 } from '@mui/material'
 
 import { fetchData } from '../../components/FetchData'
@@ -46,9 +54,14 @@ type response = {
     billing_state: string;
     billing_postcode: string;
     billing_street: string;
+    previous_residency_address_line: string;
+    previous_residency_city: string;
+    previous_residency_country: string;
+    previous_residency_state: string;
+    previous_residency_postcode: string;
+    previous_residency_street: string;
     contact_name: string;
     name: string;
-
     created_at: string;
     created_on: string;
     created_on_arrow: string;
@@ -86,6 +99,8 @@ type response = {
     teams: [];
     leads: string;
 
+    intake_forms: [];
+
 };
 export const AccountDetails = (props: any) => {
     const { state } = useLocation()
@@ -102,6 +117,7 @@ export const AccountDetails = (props: any) => {
     const [selectedCountry, setSelectedCountry] = useState([])
     const [attachments, setAttachments] = useState([])
     const [tags, setTags] = useState([])
+    const [intakeForms, setIntakeForms] = useState([])
     const [countries, setCountries] = useState<string[][]>([])
     const [source, setSource] = useState([])
     const [status, setStatus] = useState([])
@@ -138,6 +154,7 @@ export const AccountDetails = (props: any) => {
                     setLeads(res?.leads)
                     setTags(res?.tags)
                     setTeams(res?.teams)
+                    setIntakeForms(res?.intake_forms)
                     // setAttachments(res?.attachments)
                     // setTags(res?.tags)
                     // setCountries(res?.countries)
@@ -159,16 +176,7 @@ export const AccountDetails = (props: any) => {
                 </Snackbar >
             })
     }
-    const accountCountry = (country: string) => {
-        let countryName: string[] | undefined;
-        for (countryName of countries) {
-            if (Array.isArray(countryName) && countryName.includes(country)) {
-                const ele = countryName;
-                break;
-            }
-        }
-        return countryName?.[1]
-    }
+    
     const editHandle = () => {
         // navigate('/contacts/edit-contacts', { state: { value: contactDetails, address: newAddress } })
         let country: string[] | undefined;
@@ -331,7 +339,16 @@ export const AccountDetails = (props: any) => {
                                             {accountDetails?.skype_ID}
                                         </Link> : '----'}
                                     </div>
+                                </div>\
+                            </div>
+                            <div style={{ padding: '20px', marginTop: '10px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <div style={{ width: '32%' }}>
+                                    <div className='title2'>Date of Birth</div>
+                                    <div className='title3'>
+                                        {accountDetails?.date_of_birth || '----'}
+                                    </div>
                                 </div>
+
                             </div>
                             {/* </div> */}
                             {/* Address details */}
@@ -378,7 +395,55 @@ export const AccountDetails = (props: any) => {
                                         <div className='title2'>Country</div>
                                         <div className='title3'>
                                             {/* {accountDetails?.billing_country || '----'} */}
-                                            {accountCountry(accountDetails?.billing_country || '----')}
+                                            {accountDetails?.billing_country || '----'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{ marginTop: '2%' }}>
+                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
+                                        Previous Address Details
+                                    </div>
+                                </div>
+                                <div style={{ padding: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
+                                    <div style={{ width: '32%' }}>
+                                        <div className='title2'>Address Lane</div>
+                                        <div className='title3'>
+                                            {accountDetails?.previous_residency_address_line || '----'}
+                                        </div>
+                                    </div>
+                                    <div style={{ width: '32%' }}>
+                                        <div className='title2'>Street</div>
+                                        <div className='title3'>
+                                            {accountDetails?.previous_residency_street || '----'}
+                                        </div>
+                                    </div>
+                                    <div style={{ width: '32%' }}>
+                                        <div className='title2'>City</div>
+                                        <div className='title3'>
+                                            {accountDetails?.previous_residency_city || '----'}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ padding: '20px', marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <div style={{ width: '32%' }}>
+                                        <div className='title2'>Pincode</div>
+                                        <div className='title3'>
+                                            {accountDetails?.previous_residency_postcode || '----'}
+                                        </div>
+                                    </div>
+                                    <div style={{ width: '32%' }}>
+                                        <div className='title2'>State</div>
+                                        <div className='title3'>
+                                            {accountDetails?.previous_residency_state || '----'}
+                                        </div>
+                                    </div>
+                                    <div style={{ width: '32%' }}>
+                                        <div className='title2'>Country</div>
+                                        <div className='title3'>
+                                            {/* {accountDetails?.billing_country || '----'} */}
+                                            {accountDetails?.previous_residency_country || '----'}
                                         </div>
                                     </div>
                                 </div>
@@ -397,36 +462,98 @@ export const AccountDetails = (props: any) => {
 
                         </Box>
                     </Box>
-                    <Box sx={{ width: '34%' }}>
-                        <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
-                            <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
-                                    Attachments
+                    <div style={{display: 'flex', flexDirection: 'column', width: "34%"}}>
+                        <Box sx={{ width: '100%' }}>
+                            <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
+                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
+                                        Attachments
+                                    </div>
+                                    {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
+                                    {/* Add Social #1E90FF */}
+                                    <Button
+                                        type='submit'
+                                        variant='text'
+                                        size='small'
+                                        startIcon={<FaPlus style={{ fill: '#3E79F7', width: '12px' }} />}
+                                        style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
+                                    >
+                                        Add Attachments
+                                    </Button>
+                                    {/* </div> */}
                                 </div>
-                                {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
-                                {/* Add Social #1E90FF */}
-                                <Button
-                                    type='submit'
-                                    variant='text'
-                                    size='small'
-                                    startIcon={<FaPlus style={{ fill: '#3E79F7', width: '12px' }} />}
-                                    style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
-                                >
-                                    Add Attachments
-                                </Button>
-                                {/* </div> */}
-                            </div>
 
-                            <div style={{ padding: '10px 10px 10px 15px', marginTop: '5%' }}>
-                                {/* {lead && lead.lead_attachment} */}
-                                {accountDetails?.account_attachment?.length ? accountDetails?.account_attachment.map((pic: any, i: any) =>
-                                    <Box key={i} sx={{ width: '100px', height: '100px', border: '0.5px solid gray', borderRadius: '5px' }}>
-                                        <img src={pic} alt={pic} />
-                                    </Box>
-                                ) : ''}
-                            </div>
+                                <div style={{ padding: '10px 10px 10px 15px', marginTop: '5%' }}>
+                                    {/* {lead && lead.lead_attachment} */}
+                                    {accountDetails?.account_attachment?.length ? accountDetails?.account_attachment.map((pic: any, i: any) =>
+                                        <Box key={i} sx={{ width: '100px', height: '100px', border: '0.5px solid gray', borderRadius: '5px' }}>
+                                            <img src={pic} alt={pic} />
+                                        </Box>
+                                    ) : ''}
+                                </div>
+                            </Box>
                         </Box>
-                    </Box>
+                        <Box sx={{ width: '100%', marginTop: "16px" }}>
+                            <Box sx={{ borderRadius: '10px', border: '1px solid #80808038', backgroundColor: 'white' }}>
+                                <div style={{ padding: '20px', borderBottom: '1px solid lightgray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a3353f0' }}>
+                                        Renters Forms
+                                    </div>
+                                    {/* <div style={{ color: "#3E79F7", fontSize: "16px", fontWeight: "bold" }}> */}
+                                    {/* Add Social #1E90FF */}
+                                    <Button
+                                        type='submit'
+                                        variant='text'
+                                        size='small'
+                                        startIcon={<FaPlus style={{ fill: '#3E79F7', width: '12px' }} />}
+                                        style={{ textTransform: 'capitalize', fontWeight: 600, fontSize: '16px' }}
+                                        onClick={() => navigate('/app/accounts/add-renters-form', {state : {account: accountDetails}})}
+                                    >
+                                        Add Renters Form
+                                    </Button>
+                                    {/* </div> */}
+                                </div>
+
+                                <div style={{ padding: '10px 10px 10px 15px', marginTop: '5%' }}>
+                                <Table>
+                                <TableBody>
+                                        {
+                                            intakeForms != null && intakeForms?.length > 0 ?
+                                                intakeForms.map((item: any, index: any) => {
+                                                        return (
+                                                            <TableRow
+                                                                tabIndex={-1}
+                                                                key={index}
+                                                                sx={{ border: 0, '&:nth-of-type(even)': { backgroundColor: 'whitesmoke' }, color: 'rgb(26, 51, 83)', textTransform: 'capitalize' }}
+                                                            >
+                                                                <TableCell
+                                                                    className='tableCell-link'
+                                                                >
+                                                                    <Typography>Renters Form {index + 1}</Typography>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )
+                                                    })
+                                                : <TableRow> <TableCell sx={{ border: 0 }}><Typography>No forms available</Typography></TableCell></TableRow>
+                                        }
+                                        {
+                                            // emptyRows > 0 && (
+                                            //     <TableRow
+                                            //         style={{
+                                            //             height: (dense ? 33 : 53) * emptyRows
+                                            //         }}
+                                            //     >
+                                            //         <TableCell colSpan={6} />
+                                            //     </TableRow>
+                                            // )
+
+                                        }
+                                    </TableBody>
+                                    </Table>
+                                </div>
+                            </Box>
+                        </Box>
+                    </div>
                 </Box>
             </div>
         </Box>
