@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState, useEffect } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
     TextField,
@@ -16,23 +16,20 @@ import {
     FormHelperText,
     IconButton,
     Select,
-    Divider,
-    Button,
-    Snackbar,
-    Alert,
+    Divider
 } from '@mui/material'
 import '../../styles/style.css'
 import { AccountsUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
-import { FaCheckCircle, FaTimesCircle, FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
-import { CustomPopupIcon, RequiredSelect, RequiredTextField, AntSwitch } from '../../styles/CssStyled'
+import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
+import { AntSwitch, CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
-import { useQuill } from 'react-quilljs';
 
 
 type CommercialFormErrors = {
+    id?: string[],
     account?: string[],
     business_name?: string[],
     business_address_line_1?: string[],
@@ -68,6 +65,7 @@ type CommercialFormErrors = {
 };
 
 interface CommercialFormData {
+    id: string,
     account: string,
     business_name: string,
     business_address_line_1: string,
@@ -102,28 +100,26 @@ interface CommercialFormData {
     org: string
 }
 
-export function AddCommercialForm() {
+export function EditCommercialForm() {
     const navigate = useNavigate()
     const { state } = useLocation()
-    const { quill, quillRef } = useQuill();
-    const initialContentRef = useRef(null);
-
     const autocompleteRef = useRef<any>(null);
     const [error, setError] = useState(false)
+    const [reset, setReset] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
     const [selectedAssignTo, setSelectedAssignTo] = useState<any[]>([]);
     const [selectedTags, setSelectedTags] = useState<any[]>([]);
     const [selectedTeams, setSelectedTeams] = useState<any[]>([]);
     const [selectedCountry, setSelectedCountry] = useState<any[]>([]);
     const [leadSelectOpen, setLeadSelectOpen] = useState(false)
-    const [currencySelectOpen, setCurrencySelectOpen] = useState(false)
-    const [stageSelectOpen, setStageSelectOpen] = useState(false)
+    const [statusSelectOpen, setStatusSelectOpen] = useState(false)
+    const [countrySelectOpen, setCountrySelectOpen] = useState(false)
     const [contactSelectOpen, setContactSelectOpen] = useState(false)
-    const [accountSelectOpen, setAccountSelectOpen] = useState(false)
 
-    
+
     const [errors, setErrors] = useState<CommercialFormErrors>({});
     const [formData, setFormData] = useState<CommercialFormData>({
+        id: '',
         account: '',
         business_name: '',
         business_address_line_1: '',
@@ -158,9 +154,48 @@ export function AddCommercialForm() {
         org: ''
     })
 
-    const handleChange2 = (title: any, val: any) => {
-            setFormData({ ...formData, [title]: val })
+    useEffect(() => {
+        setFormData(state?.value)
+    }, [state?.id])
+
+    useEffect(() => {
+        if (reset) {
+            console.log("setting form data")
+            setFormData(state?.value)
+        }
+        return () => {
+            setReset(false)
+        }
+    }, [reset])
+
+    const backbtnHandle = () => {
+        if (state?.edit) {
+            navigate('/app/accounts')
+        } else {
+            // Values were lost once transitioning through multiple components resulting in a screen error, 
+            // added aditional fileds for consistency with other components as a fix
+            // Every component that returns to account details has to pass the same fields back, otherwise edit page will break
+            navigate('/app/accounts/account-details', { state: { accountId: state?.account.id, detail: true, contacts: state?.contacts || [], status: state?.status || [], tags: state?.tags || [], users: state?.users || [], countries: state?.countries || [], teams: state?.teams || [], leads: state?.leads || []} })
+        }
     }
+    // const handleChange2 = (title: any, val: any) => {
+    //     if (title === 'contacts') {
+    //         setFormData({ ...formData, contacts: val.length > 0 ? val.map((item: any) => item.id) : [] });
+    //         setSelectedContacts(val);
+    //     } else if (title === 'assigned_to') {
+    //         setFormData({ ...formData, assigned_to: val.length > 0 ? val.map((item: any) => item.id) : [] });
+    //         setSelectedAssignTo(val);
+    //     } else if (title === 'tags') {
+    //         setFormData({ ...formData, assigned_to: val.length > 0 ? val.map((item: any) => item.id) : [] });
+    //         setSelectedTags(val);
+    //     } else if (title === 'teams') {
+    //         setFormData({ ...formData, teams: val.length > 0 ? val.map((item: any) => item.id) : [] });
+    //         setSelectedTags(val);
+    //     }
+    //     else {
+    //         setFormData({ ...formData, [title]: val })
+    //     }
+    // }
     const handleChange = (e: any) => {
         const { name, value, files, type, checked, id } = e.target;
         if (type === 'file') {
@@ -172,12 +207,37 @@ export function AddCommercialForm() {
         else {
             setFormData({ ...formData, [name]: value });
         }
-        console.log(formData)
     };
-    const backbtnHandle = () => {
-        console.log(state)
-        navigate('/app/accounts/account-details', { state: { accountId: state?.account.id, detail: true , contacts: state?.contacts || [], status: state?.status || [], tags: state?.tags || [], users: state?.users || [], countries: state?.countries || [], teams: state?.teams || [], leads: state?.leads || []}})
-    }
+    // const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    //     const file = event.target.files?.[0] || null;
+    //     if (file) {
+    //         setFormData({ ...formData, account_attachment: file?.name })
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             setFormData({ ...formData, file: reader.result as string });
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
+    // const handleFileChange = (event: any) => {
+    //     const file = event.target.files?.[0] || null;
+    //     if (file) {
+    //         setFormData((prevData) => ({
+    //             ...prevData,
+    //             account_attachment: file.name,
+    //             file: prevData.file,
+    //         }));
+
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             setFormData((prevData) => ({
+    //                 ...prevData,
+    //                 file: reader.result as string,
+    //             }));
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
     const handleSubmit = (e: any) => {
         e.preventDefault();
         submitForm();
@@ -224,14 +284,13 @@ export function AddCommercialForm() {
             any_losses: formData.any_losses,
             org: formData.org
         }
-        console.log(data)
-        fetchData(`${AccountsUrl}/commercial-intake/`, 'POST', JSON.stringify(data), Header)
+
+        fetchData(`${AccountsUrl}/commercial-form/${formData.id}/`, 'PUT', JSON.stringify(data), Header)
             .then((res: any) => {
                 // console.log('Form data:', res);
                 if (!res.error) {
                     resetForm()
-                    console.log(state)
-                    navigate('/app/accounts/account-details', { state: { accountId: state?.account.id, detail: true }})
+                    navigate('/app/accounts')
                 }
                 if (res.error) {
                     setError(true)
@@ -243,6 +302,7 @@ export function AddCommercialForm() {
     };
     const resetForm = () => {
         setFormData({
+            id: '',
             account: '',
             business_name: '',
             business_address_line_1: '',
@@ -277,43 +337,31 @@ export function AddCommercialForm() {
             org: ''
         });
         setErrors({})
-        setSelectedContacts([]);
-        setSelectedAssignTo([])
-        setSelectedTags([])
-        setSelectedTeams([])
     }
     const onCancel = () => {
-        resetForm()
+        // resetForm()
+        setReset(true)
     }
 
-    const resetQuillToInitialState = () => {
-        // Reset the Quill editor to its initial state
-        setFormData({ ...formData })
-        if (quill && initialContentRef.current !== null) {
-            quill.clipboard.dangerouslyPasteHTML(initialContentRef.current);
-        }
-    };
 
     const module = 'Accounts'
-    const crntPage = 'Add Intake Form'
-    const backBtn = 'Back To Account Details'
+    const crntPage = 'Add Account'
+    const backBtn = state?.edit ? 'Back to Accounts' : 'Back to AccountDetails'
 
-    // console.log(formData, 'leadsform')
-
-    
+    // console.log(state, 'accountform')
     return (
         <Box sx={{ mt: '60px' }}>
-        <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
-        <Box sx={{ mt: "120px" }}>
-            <form onSubmit={handleSubmit}>
-                <div style={{ padding: '10px' }}>
-                    <div className='leadContainer'>
-                        <Accordion defaultExpanded style={{ width: '98%' }}>
-                            <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
-                                <Typography className='accordion-header'>Add Rental Intake Form</Typography>
-                            </AccordionSummary>
-                            <Divider className='divider' />
-                            <AccordionDetails>
+            <CustomAppBar backbtnHandle={backbtnHandle} module={module} backBtn={backBtn} crntPage={crntPage} onCancel={onCancel} onSubmit={handleSubmit} />
+            <Box sx={{ mt: "120px" }}>
+                <form onSubmit={handleSubmit}>
+                    <div style={{ padding: '10px' }}>
+                        <div className='leadContainer'>
+                            <Accordion defaultExpanded style={{ width: '98%' }}>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Account Information</Typography>
+                                </AccordionSummary>
+                                <Divider className='divider' />
+                                <AccordionDetails>
                                 <Box>
                                     <div className='fieldContainer2'>
                                         <div className='fieldSubContainer'>
@@ -768,11 +816,11 @@ export function AddCommercialForm() {
                                     </div>  
                                 </Box>
                             </AccordionDetails>
-                        </Accordion>
-                    </div>
-                </div>
-            </form>
-        </Box>
-    </Box >
+                            </Accordion>
+                        </div >
+                    </div >
+                </form >
+            </Box >
+        </Box >
     )
 }

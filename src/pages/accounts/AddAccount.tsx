@@ -23,7 +23,7 @@ import { AccountsUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
-import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
+import { AntSwitch, CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 
@@ -54,9 +54,14 @@ type FormErrors = {
     status?: string[],
     lead?: string[],
     contacts?: string[],
-    file?: string[]
-    date_of_birth?: string[]
-
+    file?: string[],
+    date_of_birth?: string[],
+    driver_liscence_number?: string[],
+    married?: string[],
+    violations?: string[],
+    rated_driver_or_excluded?: string[],
+    occupation?: string[],
+    current_insurance_company?: string[],
 };
 interface FormData {
     name: string,
@@ -85,6 +90,12 @@ interface FormData {
     contacts: [],
     file?: string | null,
     date_of_birth: Date | null,
+    driver_liscence_number: string,
+    married: boolean,
+    violations: boolean,
+    rated_driver_or_excluded: string,
+    occupation: string,
+    current_insurance_company: string
 }
 
 export function AddAccount() {
@@ -130,6 +141,12 @@ export function AddAccount() {
         contacts: [],
         file: null,
         date_of_birth: null,
+        driver_liscence_number: '',
+        married: false,
+        violations: false,
+        rated_driver_or_excluded: '',
+        occupation: '',
+        current_insurance_company: ''
     })
 
     const handleChange2 = (title: any, val: any) => {
@@ -203,7 +220,13 @@ export function AddAccount() {
             status: formData.status,
             lead: formData.lead,
             contacts: formData.contacts,
-            date_of_birth: formData.date_of_birth
+            date_of_birth: formData.date_of_birth,
+            driver_liscence_number: formData.driver_liscence_number,
+            married: formData.married,
+            violations: formData.violations,
+            rated_driver_or_excluded: formData.rated_driver_or_excluded,
+            occupation: formData.occupation,
+            current_insurance_company: formData.current_insurance_company
         }
         fetchData(`${AccountsUrl}/`, 'POST', JSON.stringify(data), Header)
             .then((res: any) => {
@@ -248,6 +271,12 @@ export function AddAccount() {
             contacts: [],
             file: null,
             date_of_birth: null,
+            driver_liscence_number: '',
+            married: false,
+            violations: false,
+            rated_driver_or_excluded: '',
+            occupation: '',
+            current_insurance_company: ''
         });
         setErrors({})
         setSelectedContacts([]);
@@ -856,6 +885,96 @@ export function AddAccount() {
                                 </AccordionDetails>
                             </Accordion>
                         </div>
+                    </div >
+
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
+                        <Accordion style={{ width: '98%' }} defaultExpanded>
+                            <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                <Typography className='accordion-header'>Driver Information</Typography>
+                            </AccordionSummary>
+                            <Divider className='divider' />
+                            <AccordionDetails>
+                                <Box
+                                    sx={{ width: '98%', color: '#1A3353', mb: 1 }}
+                                    component='form'
+                                >
+                                    <div className='fieldContainer'>
+                                        <div className='fieldSubContainer'>
+                                            <div className='fieldTitle'>Driver Liscence Nummber</div>
+                                            <TextField
+                                                name='driver_liscence_number'
+                                                value={formData.driver_liscence_number}
+                                                onChange={handleChange}
+                                                style={{ width: '70%' }}
+                                                size='small'
+                                                helperText={errors?.driver_liscence_number?.[0] ? errors?.driver_liscence_number[0] : ''}
+                                                error={!!errors?.driver_liscence_number?.[0]}
+                                            />
+                                        </div>
+                                        <div className='fieldSubContainer'>
+                                            <div className='fieldTitle'>Married</div>
+                                            <AntSwitch
+                                                name='married'
+                                                checked={formData.married}
+                                                // onChange={handleChange}
+                                                onChange={(e: any) => { setFormData((prevData) => ({ ...prevData, married: e.target.checked })) }}
+                                                sx={{ mt: '1%' }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className='fieldContainer2'>
+                                        <div className='fieldSubContainer'>
+                                            <div className='fieldTitle'>Rated Driver or Excluded</div>
+                                            <TextField
+                                                name='rated_driver_or_excluded'
+                                                value={formData.rated_driver_or_excluded}
+                                                onChange={handleChange}
+                                                style={{ width: '70%' }}
+                                                size='small'
+                                                helperText={errors?.rated_driver_or_excluded?.[0] ? errors?.rated_driver_or_excluded[0] : ''}
+                                                error={!!errors?.rated_driver_or_excluded?.[0]}
+                                            />
+                                        </div>
+                                        <div className='fieldSubContainer'>
+                                            <div className='fieldTitle'>Occupation</div>
+                                            <TextField
+                                                name='occupation'
+                                                value={formData.occupation}
+                                                onChange={handleChange}
+                                                style={{ width: '70%' }}
+                                                size='small'
+                                                helperText={errors?.occupation?.[0] ? errors?.occupation[0] : ''}
+                                                error={!!errors?.occupation?.[0]}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className='fieldContainer2'>
+                                        <div className='fieldSubContainer'>
+                                            <div className='fieldTitle'>Current Insurance Company</div>
+                                            <TextField
+                                                name='current_insurance_company'
+                                                value={formData.current_insurance_company}
+                                                onChange={handleChange}
+                                                style={{ width: '70%' }}
+                                                size='small'
+                                                helperText={errors?.current_insurance_company?.[0] ? errors?.current_insurance_company[0] : ''}
+                                                error={!!errors?.current_insurance_company?.[0]}
+                                            />
+                                        </div>
+                                        <div className='fieldSubContainer'>
+                                            <div className='fieldTitle'>Violations</div>
+                                            <AntSwitch
+                                                name='violations'
+                                                checked={formData.violations}
+                                                // onChange={handleChange}
+                                                onChange={(e: any) => { setFormData((prevData) => ({ ...prevData, violations: e.target.checked })) }}
+                                                sx={{ mt: '1%' }}
+                                            />
+                                        </div>
+                                    </div>
+                                </Box>
+                            </AccordionDetails>
+                        </Accordion>
                     </div >
                 </form >
             </Box >

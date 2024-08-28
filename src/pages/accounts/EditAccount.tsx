@@ -23,7 +23,7 @@ import { AccountsUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaFileUpload, FaPlus, FaTimes, FaUpload } from 'react-icons/fa'
-import { CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
+import { AntSwitch, CustomPopupIcon, RequiredSelect, RequiredTextField } from '../../styles/CssStyled'
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown'
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp'
 
@@ -48,9 +48,19 @@ type FormErrors = {
     status?: string[],
     lead?: string[],
     contacts?: string[],
-    file?: string[]
-
-
+    file?: string[], 
+    driver_liscence_number?: string[],
+    married?: string[],
+    rated_driver_or_excluded?: string[],
+    occupation?: string[],
+    current_insurance_company?: string[],
+    violations?: string[],
+    previous_residency_address_line?: string[],
+    previous_residency_street?: string[],
+    previous_residency_city?: string[],
+    previous_residency_state?: string[],
+    previous_residency_postcode?: string[],
+    previous_residency_country?: string[]
 };
 interface FormData {
     name: string,
@@ -71,7 +81,19 @@ interface FormData {
     status: string,
     lead: string,
     contacts: [],
-    file?: string | null
+    file?: string | null,
+    driver_liscence_number: string,
+    married: boolean,
+    rated_driver_or_excluded: string,
+    occupation: string,
+    current_insurance_company: string,
+    violations: boolean,
+    previous_residency_address_line: string,
+    previous_residency_street: string,
+    previous_residency_city: string,
+    previous_residency_state: string,
+    previous_residency_postcode: string,
+    previous_residency_country: string
 }
 
 export function EditAccount() {
@@ -89,6 +111,8 @@ export function EditAccount() {
     const [statusSelectOpen, setStatusSelectOpen] = useState(false)
     const [countrySelectOpen, setCountrySelectOpen] = useState(false)
     const [contactSelectOpen, setContactSelectOpen] = useState(false)
+
+
     const [errors, setErrors] = useState<FormErrors>({});
     const [formData, setFormData] = useState<FormData>({
         name: '',
@@ -109,8 +133,19 @@ export function EditAccount() {
         status: '',
         lead: '',
         contacts: [],
-        file: null
-
+        file: null,
+        driver_liscence_number: '',
+        married: false,
+        rated_driver_or_excluded: '',
+        occupation: '',
+        current_insurance_company: '',
+        violations: false,
+        previous_residency_address_line: '',
+        previous_residency_street: '',
+        previous_residency_city: '',
+        previous_residency_state: '',
+        previous_residency_postcode: '',
+        previous_residency_country: ''
     })
 
     useEffect(() => {
@@ -122,6 +157,7 @@ export function EditAccount() {
 
     useEffect(() => {
         if (reset) {
+            console.log("setting form data")
             setFormData(state?.value)
         }
         return () => {
@@ -133,7 +169,9 @@ export function EditAccount() {
         if (state?.edit) {
             navigate('/app/accounts')
         } else {
-            navigate('/app/accounts/account-details', { state: { accountId: state?.id, detail: true } })
+            // Values were lost once transitioning through multiple components resulting in a screen error, 
+            // added aditional fileds for consistency with other components as a fix
+            navigate('/app/accounts/account-details', { state: { accountId: state?.id, detail: true, contacts: state?.contacts || [], status: state?.status || [], tags: state?.tags || [], users: state?.users || [], countries: state?.countries || [], teams: state?.teams || [], leads: state?.leads || []} })
         }
     }
     const handleChange2 = (title: any, val: any) => {
@@ -226,7 +264,19 @@ export function EditAccount() {
             website: formData.website,
             status: formData.status,
             lead: formData.lead,
-            contacts: formData.contacts
+            contacts: formData.contacts,
+            driver_liscence_number: formData.driver_liscence_number,
+            married: formData.married,
+            rated_driver_or_excluded: formData.rated_driver_or_excluded,
+            occupation: formData.occupation,
+            current_insurance_company: formData.current_insurance_company,
+            violations: formData.violations,
+            previous_residency_address_line: formData.previous_residency_address_line,
+            previous_residency_street: formData.previous_residency_street,
+            previous_residency_city: formData.previous_residency_city,
+            previous_residency_state: formData.previous_residency_state,
+            previous_residency_postcode: formData.previous_residency_postcode,
+            previous_residency_country: formData.previous_residency_country
         }
 
         fetchData(`${AccountsUrl}/${state?.id}/`, 'PUT', JSON.stringify(data), Header)
@@ -264,7 +314,19 @@ export function EditAccount() {
             status: '',
             lead: '',
             contacts: [],
-            file: null
+            file: null,
+            driver_liscence_number: '',
+            married: false,
+            rated_driver_or_excluded: '',
+            occupation: '',
+            current_insurance_company: '',
+            violations: false,
+            previous_residency_address_line: '',
+            previous_residency_street: '',
+            previous_residency_city: '',
+            previous_residency_state: '',
+            previous_residency_postcode: '',
+            previous_residency_country: ''
         });
         setErrors({})
         setSelectedContacts([]);
@@ -718,6 +780,202 @@ export function EditAccount() {
                                 </AccordionDetails>
                             </Accordion>
                         </div>
+                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
+                            <Accordion style={{ width: '98%' }} defaultExpanded>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>previous Address</Typography>
+                                </AccordionSummary>
+                                <Divider className='divider' />
+                                <AccordionDetails>
+                                    <Box
+                                        sx={{ width: '98%', color: '#1A3353', mb: 1 }}
+                                        component='form'
+                                    >
+                                        <div className='fieldContainer'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>previous Address Line</div>
+                                                <TextField
+                                                    name='previous_residency_address_line'
+                                                    value={formData.previous_residency_address_line}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_address_line?.[0] ? errors?.previous_residency_address_line[0] : ''}
+                                                    error={!!errors?.previous_residency_address_line?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>previous Street</div>
+                                                <TextField
+                                                    name='previous_residency_street'
+                                                    value={formData.previous_residency_street}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_street?.[0] ? errors?.previous_residency_street[0] : ''}
+                                                    error={!!errors?.previous_residency_street?.[0]}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>previous City</div>
+                                                <TextField
+                                                    name='previous_residency_city'
+                                                    value={formData.previous_residency_city}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_city?.[0] ? errors?.previous_residency_city[0] : ''}
+                                                    error={!!errors?.previous_residency_city?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>previous State</div>
+                                                <TextField
+                                                    name='previous_residency_state'
+                                                    value={formData.previous_residency_state}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_state?.[0] ? errors?.previous_residency_state[0] : ''}
+                                                    error={!!errors?.previous_residency_state?.[0]}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>previous Postcode</div>
+                                                <TextField
+                                                    name='previous_residency_postcode'
+                                                    value={formData.previous_residency_postcode}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.previous_residency_postcode?.[0] ? errors?.previous_residency_postcode[0] : ''}
+                                                    error={!!errors?.previous_residency_postcode?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>previous Country</div>
+                                                <FormControl sx={{ width: '70%' }}>
+                                                    <Select
+                                                        name='previous_residency_country'
+                                                        value={formData.previous_residency_country}
+                                                        open={countrySelectOpen}
+                                                        onClick={() => setCountrySelectOpen(!countrySelectOpen)}
+                                                        IconComponent={() => (
+                                                            <div onClick={() => setCountrySelectOpen(!countrySelectOpen)} className="select-icon-background">
+                                                                {countrySelectOpen ? <FiChevronUp className='select-icon' /> : <FiChevronDown className='select-icon' />}
+                                                            </div>
+                                                        )}
+                                                        className={'select'}
+                                                        onChange={handleChange}
+                                                        error={!!errors?.previous_residency_country?.[0]}
+                                                    >
+                                                        {state?.countries?.length && state?.countries.map((option: any) => (
+                                                            <MenuItem key={option[0]} value={option[0]}>
+                                                                {option[1]}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    <FormHelperText>{errors?.previous_residency_country?.[0] ? errors?.previous_residency_country[0] : ''}</FormHelperText>
+                                                </FormControl>
+                                            </div>
+                                        </div>
+                                    </Box>
+                                </AccordionDetails>
+                            </Accordion>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '20px' }}>
+                            <Accordion style={{ width: '98%' }} defaultExpanded>
+                                <AccordionSummary expandIcon={<FiChevronDown style={{ fontSize: '25px' }} />}>
+                                    <Typography className='accordion-header'>Driver Information</Typography>
+                                </AccordionSummary>
+                                <Divider className='divider' />
+                                <AccordionDetails>
+                                    <Box
+                                        sx={{ width: '98%', color: '#1A3353', mb: 1 }}
+                                        component='form'
+                                    >
+                                        <div className='fieldContainer'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Driver Liscence Nummber</div>
+                                                <TextField
+                                                    name='driver_liscence_number'
+                                                    value={formData.driver_liscence_number}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.driver_liscence_number?.[0] ? errors?.driver_liscence_number[0] : ''}
+                                                    error={!!errors?.driver_liscence_number?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Married</div>
+                                                <AntSwitch
+                                                    name='married'
+                                                    checked={formData.married}
+                                                    // onChange={handleChange}
+                                                    onChange={(e: any) => { setFormData((prevData) => ({ ...prevData, married: e.target.checked })) }}
+                                                    sx={{ mt: '1%' }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Rated Driver or Excluded</div>
+                                                <TextField
+                                                    name='rated_driver_or_excluded'
+                                                    value={formData.rated_driver_or_excluded}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.rated_driver_or_excluded?.[0] ? errors?.rated_driver_or_excluded[0] : ''}
+                                                    error={!!errors?.rated_driver_or_excluded?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Occupation</div>
+                                                <TextField
+                                                    name='occupation'
+                                                    value={formData.occupation}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.occupation?.[0] ? errors?.occupation[0] : ''}
+                                                    error={!!errors?.occupation?.[0]}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='fieldContainer2'>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Current Insurance Company</div>
+                                                <TextField
+                                                    name='current_insurance_company'
+                                                    value={formData.current_insurance_company}
+                                                    onChange={handleChange}
+                                                    style={{ width: '70%' }}
+                                                    size='small'
+                                                    helperText={errors?.current_insurance_company?.[0] ? errors?.current_insurance_company[0] : ''}
+                                                    error={!!errors?.current_insurance_company?.[0]}
+                                                />
+                                            </div>
+                                            <div className='fieldSubContainer'>
+                                                <div className='fieldTitle'>Violations</div>
+                                                <AntSwitch
+                                                    name='violations'
+                                                    checked={formData.violations}
+                                                    // onChange={handleChange}
+                                                    onChange={(e: any) => { setFormData((prevData) => ({ ...prevData, violations: e.target.checked })) }}
+                                                    sx={{ mt: '1%' }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </Box>
+                                </AccordionDetails>
+                            </Accordion>
+                        </div >
                     </div >
                 </form >
             </Box >
