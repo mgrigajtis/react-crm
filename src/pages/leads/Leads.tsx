@@ -166,7 +166,7 @@ export default function Leads(props: any) {
   return (
     <Box sx={{ mt: '60px' }}>
       <CustomToolbar>
-        <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
+        <Tabs value={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
           <CustomTab value="open" label="Open" sx={{ backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871', color: tab === 'open' ? '#3f51b5' : 'white' }} />
           <CustomTab value="closed" label="Closed" sx={{ backgroundColor: tab === 'closed' ? '#F0F7FF' : '#284871', color: tab === 'closed' ? '#3f51b5' : 'white', ml: '5px' }} />
         </Tabs>
@@ -223,7 +223,7 @@ export default function Leads(props: any) {
                       <Box className='lead-box1'>
                         <Stack className='lead-row1'>
                           <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
-                            {item?.title}
+                            {item?.account_name}
                           </div>
                           <div onClick={() => deleteLead(item?.id)}>
                             <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />

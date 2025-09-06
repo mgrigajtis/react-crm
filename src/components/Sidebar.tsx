@@ -26,6 +26,12 @@ import Accounts from '../pages/accounts/Accounts';
 import { AddAccount } from '../pages/accounts/AddAccount';
 import { EditAccount } from '../pages/accounts/EditAccount';
 import { AccountDetails } from '../pages/accounts/AccountDetails';
+import { AddRentersForm } from '../pages/forms/AddRentersForm';
+import { AddCommercialForm } from '../pages/forms/AddCommercialForm';
+import { AddAutoForm } from '../pages/forms/AddAutoForm';
+import { EditRentersForm } from '../pages/forms/EditRentersForm';
+import { EditCommercialForm } from '../pages/forms/EditCommercialForm';
+import { EditAutoForm } from '../pages/forms/EditAutoForm';
 import { AddUsers } from '../pages/users/AddUsers';
 import { EditUser } from '../pages/users/EditUser';
 import UserDetails from '../pages/users/UserDetails';
@@ -303,6 +309,12 @@ export default function Sidebar(props: any) {
                             <Route path='/app/cases/add-case' element={<AddCase />} />
                             <Route path='/app/cases/edit-case' element={<EditCase />} />
                             <Route path='/app/cases/case-details' element={<CaseDetails />} />
+                            <Route path='/app/accounts/add-renters-form' element={<AddRentersForm />} />
+                            <Route path='/app/accounts/add-commercial-form' element={<AddCommercialForm />} />
+                            <Route path='/app/accounts/add-auto-form' element={<AddAutoForm />} />
+                            <Route path='/app/accounts/renters-form' element={<EditRentersForm />} />
+                            <Route path='/app/accounts/commercial-form' element={<EditCommercialForm />} />
+                            <Route path='/app/accounts/auto-form' element={<EditAutoForm />} />
                         </Routes>
                     </Box>
                 </MyContext.Provider>

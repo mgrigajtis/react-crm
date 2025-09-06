@@ -184,6 +184,10 @@ export default function Company() {
     const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
     // console.log(contactList, 'cccc')
 
+    if (loading) {
+        return <Spinner></Spinner>
+    }
+
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomToolbar sx={{ flexDirection: 'row-reverse' }}>
@@ -278,7 +282,7 @@ export default function Company() {
                                                         /></TableCell>
                                                     </TableRow>
                                                 ))
-                                            : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
+                                            : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Typography>No companies available</Typography></TableCell></TableRow>
                                     }
                                 </TableBody>
                             </Table>

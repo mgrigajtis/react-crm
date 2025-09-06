@@ -14,7 +14,6 @@ export const Header1 = {
 }
 
 export function fetchData(url: any, method: any, data = '', header: any) {
-  console.log(`${SERVER}${url}`)
   return fetch(`${SERVER}${url}`, {
     method,
     headers: header,

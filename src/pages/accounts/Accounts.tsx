@@ -441,11 +441,14 @@ export default function Accounts() {
 
     // const selectClasses = selectOpen ? 'select-opened' : '';
     // console.log(!!(selectedId?.length === 0), 'asd');
+    if (loading) {
+        return <Spinner></Spinner>;
+    }
 
     return (
         <Box sx={{ mt: '60px' }}>
             <CustomToolbar>
-                <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
+                <Tabs value={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
                     <CustomTab value="open" label="Open"
                         sx={{
                             backgroundColor: tab === 'open' ? '#F0F7FF' : '#284871',
@@ -599,16 +602,15 @@ export default function Accounts() {
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '18px' }}
                                                                         />
                                                                     </IconButton> */}
-                                                                    <IconButton>
+                                                                    <IconButton  onClick={() => deleteRow(item?.id)}>
                                                                         <FaTrashAlt
-                                                                            onClick={() => deleteRow(item?.id)}
                                                                             style={{ fill: '#1A3353', cursor: 'pointer', width: '15px' }} />
                                                                     </IconButton>
                                                                 </TableCell>
                                                             </TableRow>
                                                         )
                                                     })
-                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
+                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Typography>No accounts available</Typography></TableCell></TableRow>
                                         }
                                         {
                                             // emptyRows > 0 && (
@@ -686,7 +688,7 @@ export default function Accounts() {
                                                         </TableRow>
                                                     )
                                                 })
-                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Spinner /></TableCell></TableRow>
+                                                : <TableRow> <TableCell colSpan={6} sx={{ border: 0 }}><Typography>No accounts available</Typography></TableCell></TableRow>
                                         }
                                     </TableBody>
                                 }

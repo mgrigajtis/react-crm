@@ -309,7 +309,7 @@ export function EditUser() {
                                         <div className='fieldContainer2'>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Phone Number</div>
-                                                <Tooltip title="Number must starts with +91">
+                                                <Tooltip title="Number must be between 9 and 15 digits">
                                                     <RequiredTextField
                                                         name='phone'
                                                         value={formData.phone}
@@ -324,7 +324,7 @@ export function EditUser() {
                                             </div>
                                             <div className='fieldSubContainer'>
                                                 <div className='fieldTitle'>Alternate Phone</div>
-                                                <Tooltip title="Number must starts with +91">
+                                                <Tooltip title="Number must be between 9 and 15 digits">
                                                     <RequiredTextField
                                                         required
                                                         name='alternate_phone'
